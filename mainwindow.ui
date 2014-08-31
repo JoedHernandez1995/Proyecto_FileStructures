@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>671</width>
+    <height>417</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Proyecto</string>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QTableWidget" name="tablaEstructura">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>401</width>
+      <height>361</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_info">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>211</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Seleccione una de las opciones</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>671</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuArchivo">
+    <property name="title">
+     <string>Archivo</string>
+    </property>
+    <addaction name="actionNuevo_Archivo"/>
+    <addaction name="separator"/>
+    <addaction name="actionVer_Archivo"/>
+    <addaction name="separator"/>
+    <addaction name="actionModificar"/>
+   </widget>
+   <widget class="QMenu" name="menuRegistros">
+    <property name="title">
+     <string>Registros</string>
+    </property>
+    <addaction name="actionAgregar"/>
+    <addaction name="separator"/>
+    <addaction name="actionBuscar"/>
+    <addaction name="separator"/>
+    <addaction name="actionBorrar"/>
+    <addaction name="separator"/>
+    <addaction name="actionListar"/>
+   </widget>
+   <widget class="QMenu" name="menuOPeraciones">
+    <property name="title">
+     <string>Operaciones</string>
+    </property>
+    <addaction name="actionCompactar"/>
+    <addaction name="separator"/>
+    <addaction name="actionReindexar"/>
+    <addaction name="separator"/>
+    <addaction name="actionExportar"/>
+   </widget>
+   <addaction name="menuArchivo"/>
+   <addaction name="menuRegistros"/>
+   <addaction name="menuOPeraciones"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionNuevo_Archivo">
+   <property name="text">
+    <string>Nuevo Archivo</string>
+   </property>
+  </action>
+  <action name="actionVer_Archivo">
+   <property name="text">
+    <string>Ver Estructura</string>
+   </property>
+  </action>
+  <action name="actionModificar">
+   <property name="text">
+    <string>Modificar Estructura</string>
+   </property>
+  </action>
+  <action name="actionAgregar">
+   <property name="text">
+    <string>Agregar</string>
+   </property>
+  </action>
+  <action name="actionBuscar">
+   <property name="text">
+    <string>Buscar</string>
+   </property>
+  </action>
+  <action name="actionBorrar">
+   <property name="text">
+    <string>Borrar</string>
+   </property>
+  </action>
+  <action name="actionListar">
+   <property name="text">
+    <string>Listar</string>
+   </property>
+  </action>
+  <action name="actionCompactar">
+   <property name="text">
+    <string>Compactar</string>
+   </property>
+  </action>
+  <action name="actionReindexar">
+   <property name="text">
+    <string>Reindexar</string>
+   </property>
+  </action>
+  <action name="actionExportar">
+   <property name="text">
+    <string>Exportar</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
