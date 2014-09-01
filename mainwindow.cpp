@@ -42,11 +42,11 @@ void MainWindow::on_actionNuevo_Archivo_triggered()
 {
   bool ok;
 
-  QFile archivo("archivo.txt");
+  //QFile archivo("archivo.txt");
 
   QString text = QInputDialog::getText(this, tr("Nombre del Archivo"),tr("Ingrese el nombre:"), QLineEdit::Normal,"", &ok);  
 
-  archivo.rename(text);
+  //archivo.rename(text);
 
   int num = QInputDialog::getInt(this,tr("Numero de Campos"),tr("Ingrese el numero de campos"),1,1,2147483647,1,&ok,0);
 
@@ -70,7 +70,7 @@ for(int i=0;i<registro.getLista().size();i++){
     delimitadoresPorAgregar++;
 }
  delimitadoresPorAgregar++;//se agrega el delitadr de nueva linea
-registerLength+=delimitadoresPorAgregar;
+//registerLength+=delimitadoresPorAgregar;
 
 cout<<"}"<<endl;
 
@@ -98,13 +98,18 @@ void MainWindow::on_actionAgregar_triggered()
             if(estructura.at(i).getType()=="Integer"||estructura.at(i).getType()=="Double"){
             num = QInputDialog::getInt(this,(estructura.at(i).getname()),("Ingrese "+estructura.at(i).getname()),1,1,2147483647,1,&ok,0);
 
+
             int tamanioEntrada=0;
             QString numero=QString::number(num);
+
+                        setFixedLength(numero,estructura.at(i).getLength());
+
             for(int i=0;i<numero.size();i++){
                 tamanioEntrada++;
 
-            setFixedLength(num,tamanioEntrada,estructura.at(i).getLength());
             }//fin for
+
+
         }//fin  si es entero o real
 
 }//fin recorrido de la estructura
@@ -198,7 +203,7 @@ void MainWindow::on_actionBorrar_triggered()
 
 void MainWindow::setFixedLength(QString &texto, int size){
 
-    QFile archivo("./archivo.txt");
+    //QFile archivo("./archivo.txt");
 
     if(!archivo.open(QIODevice::ReadWrite|QIODevice::Text|QIODevice::Append))
             return;
@@ -231,7 +236,7 @@ void MainWindow::setFixedLength(QString &texto, int size){
 
 void MainWindow::setFixedLength(int &numero,int numberSize,int limiteTamanio){//number size es el numero de digitos que ingreso el usuario en la dialog
 
-    QFile archivo("./archivo.txt");
+   // QFile archivo("./archivo.txt");
 
     if(!archivo.open(QIODevice::ReadWrite|QIODevice::Text|QIODevice::Append))
             return;
