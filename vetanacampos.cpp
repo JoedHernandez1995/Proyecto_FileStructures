@@ -51,8 +51,8 @@ int vetanaCampos::getI(){
     return i;
 }
 
-int getFieldCount(){
-    //return fieldCount;
+int vetanaCampos::getFieldCount(){
+    return fieldCount;
 }
 
 void vetanaCampos::on_btnAgregar_clicked()

@@ -20,6 +20,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTableWidget>
+#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
@@ -41,6 +42,8 @@ public:
     QWidget *centralWidget;
     QTableWidget *tablaEstructura;
     QLabel *lb_info;
+    QTableWidget *tablaLista;
+    QTextBrowser *browserImpresion;
     QMenuBar *menuBar;
     QMenu *menuArchivo;
     QMenu *menuRegistros;
@@ -78,14 +81,21 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tablaEstructura = new QTableWidget(centralWidget);
         tablaEstructura->setObjectName(QStringLiteral("tablaEstructura"));
-        tablaEstructura->setGeometry(QRect(10, 20, 401, 361));
+        tablaEstructura->setGeometry(QRect(10, 30, 141, 161));
         lb_info = new QLabel(centralWidget);
         lb_info->setObjectName(QStringLiteral("lb_info"));
         lb_info->setGeometry(QRect(40, 0, 211, 21));
+        tablaLista = new QTableWidget(centralWidget);
+        tablaLista->setObjectName(QStringLiteral("tablaLista"));
+        tablaLista->setGeometry(QRect(220, 30, 161, 101));
+        tablaLista->setRowCount(0);
+        browserImpresion = new QTextBrowser(centralWidget);
+        browserImpresion->setObjectName(QStringLiteral("browserImpresion"));
+        browserImpresion->setGeometry(QRect(190, 140, 256, 192));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 671, 20));
+        menuBar->setGeometry(QRect(0, 0, 671, 25));
         menuArchivo = new QMenu(menuBar);
         menuArchivo->setObjectName(QStringLiteral("menuArchivo"));
         menuRegistros = new QMenu(menuBar);

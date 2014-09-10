@@ -10,10 +10,14 @@
 #include "iostream"
 #include <QFile>
 #include <QTextStream>
+#include <ostream>
+#include <istream>
 
 using namespace std;
 
 QFile archivo("./archivo.txt");
+QFile archivoComp("./Compactado.txt");
+QFile archivorrn("./RRN.txt");
 int registerLength=0;
 QList <Campo> estructura;
 
@@ -155,16 +159,83 @@ void MainWindow::on_actionAgregar_triggered()
 
 void MainWindow::on_actionListar_triggered()
 {
-    if(!archivo.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Append))
+
+    /*
+     *Utilizar tokens para escribir registro por registro , ignorando todos aquellos que no tengan el caracter de omision al inicio
+     *imprimir en tabla
+     */
+    ui->tablaLista->setColumnCount(estructura.size());
+    for(int i = 0; i < estructura.size(); i++){
+        ui->tablaLista->setHorizontalHeaderItem(i,new QTableWidgetItem(estructura.at(i).getname()));
+    }
+
+    if(!archivo.open(QIODevice::ReadWrite|QIODevice::Text))
         return;
-    QTextStream out(&archivo);
-    out<<"hello2\n";
-    cout<<"hello";
+
+    QTextStream browser(&archivo);
+
+    ui->browserImpresion->setText(browser.readAll());
+
     archivo.close();
-}
+
+    if(!archivo.open(QIODevice::ReadWrite|QIODevice::Text))
+        return;
+    QTextStream in(&archivo);
+
+
+    while(!in.atEnd()){
+        QString line=in.readLine();
+        //**************************************************************//
+
+        QList<QString>arregloCamposLeidos=line.split(",");
+
+        cout<<line.toStdString()<<endl;
+       // cout<<"TAMAÑO:"<<arregloCamposLeidos.size()<<endl;
+
+      //  cout<<"Primer caracter: "<<arregloCamposLeidos.at(0)[0]<<endl
+    if(arregloCamposLeidos.at(0)[0]!='&'){//si el registro no esta marcado como borrado ...
+
+        //***************** ***Agregado a Tabla********************//
+        cout<<"Numero inicial de rows: "<<ui->tablaLista->rowCount()<<endl;
+
+        int row=ui->tablaLista->rowCount();
+        //bool endOfRecord=false;
+        int recordSize=0;
+
+            for(int i=0;i<arregloCamposLeidos.size()-1;i++){
+                cout<<"Se insertaria "<<arregloCamposLeidos.at(i).toStdString()<<" en la fila"<<row<<" y en la columna "<<i<<endl;
+                //if(ui->tablaLista->rowCount()==0)
+                //ui->tablaLista->insertRow(row);
+
+                QTableWidgetItem* item= new QTableWidgetItem();
+                item->setText("hola");
+                ui->tablaLista->setItem(row,i,item);
+                recordSize++;
+
+                if(recordSize==arregloCamposLeidos.size()-1){
+                    cout<<"add plus 1"<<endl;
+                    ui->tablaLista->insertRow(row);
+                    cout<<"ahora hay "<<ui->tablaLista->rowCount()<<" filas"<<endl;
+                    recordSize=0;
+                }
+
+
+            }//fin for recorrido de arreglo
+
+        //*****************Fin de Agregado a Tabla**********************//
+
+        }//fin de agregado de registros que no han sido marcados como borrados
+
+    }//fin recorrido del archivo
+
+    archivo.close();
+}//fin de la funcion listado de registros en un archivo
 
 void MainWindow::on_actionVer_Archivo_triggered()
 {
+
+
+
     ui->tablaEstructura->setRowCount(estructura.length());
     for(int i = 0; i < estructura.length(); i++){
         QString name = estructura.at(i).getname();
@@ -199,6 +270,44 @@ void MainWindow::on_actionBorrar_triggered()
      *
      *cerramos archivo
      */
+
+   // int rrn=ui->tablaLista->currentRow();
+
+    //cout<<"hola"<<endl;
+
+
+    if(!archivo.open(QIODevice::ReadWrite|QIODevice::Text))
+        return;
+
+   // cout<<"hola2"<<endl;
+    int numberOfLines=0;
+
+    QTextStream in(&archivo);
+    QTextStream out(&archivo);
+
+
+    while(!in.atEnd()){
+        //cout<<"hola3"<<endl;
+
+        QString line=in.readLine();
+        numberOfLines++;
+        cout<<"se ha sumado uno a las filas"<<endl;
+
+        if(3==numberOfLines){
+            cout<<"se ha llegado a la mera linea"<<endl;
+            cout<<line.toStdString()<<endl;
+            QString tempLine="";
+            for(int i=0;i<line.size();i++){
+                tempLine+="&";
+            }
+            cout<<tempLine.toStdString()<<endl;
+            out<<tempLine;
+        }
+
+    }//fin while mientras no termine el archivo
+
+    archivo.close();
+
 }
 
 void MainWindow::setFixedLength(QString &texto, int size){
@@ -267,3 +376,34 @@ void MainWindow::setFixedLength(int &numero,int numberSize,int limiteTamanio){//
     archivo.close();
 
 }//fin de la funcion
+
+void MainWindow::on_actionCompactar_triggered()
+{
+    //opcion de compactacion
+    //QFile archivoComp("./Compactado.txt");
+
+    if(!archivoComp.open(QIODevice::ReadWrite|QIODevice::Text|QIODevice::Append))
+        return;
+
+    if(!archivo.open(QIODevice::ReadWrite|QIODevice::Text))
+        return;
+
+    QTextStream in(&archivo);
+    QTextStream out(&archivoComp);
+
+    while(!in.atEnd()){
+       QString line=in.readLine();
+       //cout<<line.toStdString()<<endl;
+       if(line.at(0)!='&'){
+           //cout<<"es escribe "<<line.toStdString()<<" al archivo"<<endl;
+           out<<line<<'\n';
+
+       }//fin si el registro no esta marcado
+
+
+    }//end of file
+
+    archivoComp.close();
+    archivo.close();
+
+}//end of function

@@ -29,6 +29,8 @@ private slots:
     void setFixedLength(int&,int,int);
     void setFixedLength(QString &,int);
 
+    void on_actionCompactar_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

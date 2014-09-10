@@ -17,7 +17,7 @@ public:
     explicit vetanaCampos(QWidget *parent = 0,int=1);
     ~vetanaCampos();
 
-    //getFieldCount();
+    int getFieldCount();
 
     QString getNombre();
     QString getTipo();
