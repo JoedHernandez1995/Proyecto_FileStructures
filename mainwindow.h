@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "campo.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,9 +28,13 @@ private slots:
     void on_actionBorrar_triggered();
 
     void setFixedLength(int&,int,int);
-    void setFixedLength(QString &,int);
+    void setFixedLength(QString &, int);
+    void insertEndOfLine();
+    void insertarEncabezadoBonito(QList<Campo> campos);
 
     void on_actionCompactar_triggered();
+
+    void on_actionBuscar_triggered();
 
 private:
     Ui::MainWindow *ui;

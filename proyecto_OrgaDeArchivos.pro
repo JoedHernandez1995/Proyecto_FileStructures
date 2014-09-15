@@ -16,12 +16,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     vetanacampos.cpp \
     registro.cpp \
-    campo.cpp
+    campo.cpp \
+    busqueda.cpp
 
 HEADERS  += mainwindow.h \
     vetanacampos.h \
     registro.h \
-    campo.h
+    campo.h \
+    busqueda.h
 
 FORMS    += mainwindow.ui \
-    vetanacampos.ui
+    vetanacampos.ui \
+    busqueda.ui
