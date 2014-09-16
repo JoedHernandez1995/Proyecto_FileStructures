@@ -91,7 +91,7 @@ for(int i=0;i<registro.getLista().size();i++){
 cout<<"}"<<endl;
 
 insertarEncabezadoBonito(arregloDeEstructura);
-   cout<<"buenaaaaaaaaaaaaaaaaaaaaas999";
+  // cout<<"buenaaaaaaaaaaaaaaaaaaaaas999";
 
 }
 
@@ -105,7 +105,7 @@ void MainWindow::on_actionAgregar_triggered()
     QTextStream escrituraDeRegistrosIN(&numeroRegistros);//lee cuantos registros existen en otro archivo de texto
    // QTextStream escrituraDeRegistrosOUT(&numeroRegistros);
 
-       cout<<"buenaaaaaaaaaaaaaaaaaaaaas";
+//       cout<<"buenaaaaaaaaaaaaaaaaaaaaas";
 
     QString  temporal=escrituraDeRegistrosIN.readLine();
 
@@ -118,7 +118,7 @@ void MainWindow::on_actionAgregar_triggered()
     //QString numeroDeRegistro;
     ///numeroDeRegistro=numeroActualEnString.at(temporal.size());
 
-       cout<<"buenaaaaaaaaaaaaaaaaaaaaas2";
+      // cout<<"buenaaaaaaaaaaaaaaaaaaaaas2";
 
     numeroRegistros.close();
 
@@ -131,7 +131,7 @@ void MainWindow::on_actionAgregar_triggered()
 
        impBonita.close();
 
-          cout<<"buenaaaaaaaaaaaaaaaaaaaaa3";
+         // cout<<"buenaaaaaaaaaaaaaaaaaaaaa3";
 
     QString registroEnviado;
     QString text;
@@ -428,17 +428,27 @@ void MainWindow::setFixedLength(QString &texto, int size){
               }//fin del recorrido de la cadena
               out<<texto<<',';
 
-                salidaBonita<<textoBonito<<'\t';
+              salidaBonita<<textoBonito<<'\t';
           }//fin relleno de registro si es de menor longitud al limite
 
-          QString newText="";
+          else
+
+          if(texto.size()==size){
+              out<<texto<<',';
+              salidaBonita<<textoBonito<<'\t';
+          }
+
+          else
 
                  if(texto.size()>size){
+
+                     QString newText="";
+
                      for(int i=0;i<size;i++){
                          newText.append(texto.at(i));
                      }
                      out<<newText+',';
-                       salidaBonita<<newText<<'\t';
+                       salidaBonita<<newText;
                  }
 
       archivo.close();
@@ -582,10 +592,4 @@ void MainWindow::on_actionBuscar_triggered()
     //de ahi, solo queda setear en un text browser el resultado
 
 }//fin de la funcion busqueda
-
-
-
-
-
-
 
