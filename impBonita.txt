@@ -1,0 +1,13 @@
+     nombre	apellido	edad	
+*********************
+1).-horacio	 galdamez	 19	 
+2).-cinthia	 lopez	 19	 
+3).-francisco	torres	 19	 
+4).-andrea	 galdamez	 22	 
+5).-cruj	 galdamez	 12	 
+     nombre	apellido	edad	
+*********************
+     nombre	apellido	edad	
+*********************
+     nombre	edad	peso	
+*********************
