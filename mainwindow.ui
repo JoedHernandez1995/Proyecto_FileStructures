@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>671</width>
-    <height>417</height>
+    <width>617</width>
+    <height>535</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,29 +22,29 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>141</width>
-      <height>251</height>
+      <width>401</width>
+      <height>141</height>
      </rect>
     </property>
    </widget>
    <widget class="QLabel" name="lb_info">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>10</x>
       <y>0</y>
-      <width>211</width>
+      <width>161</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Seleccione una de las opciones</string>
+     <string>Estructura del Archivo</string>
     </property>
    </widget>
    <widget class="QTableWidget" name="tablaLista">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>30</y>
+      <x>150</x>
+      <y>390</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -56,11 +56,37 @@
    <widget class="QTextBrowser" name="browserImpresion">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>70</y>
-      <width>421</width>
-      <height>271</height>
+      <x>10</x>
+      <y>220</y>
+      <width>401</width>
+      <height>251</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>131</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tabla de Registros</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>190</y>
+      <width>99</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Modificar</string>
     </property>
    </widget>
   </widget>
@@ -69,7 +95,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>671</width>
+     <width>617</width>
      <height>25</height>
     </rect>
    </property>

@@ -4,13 +4,15 @@
 #include <QFile>
 #include <QTextStream>
 
-busqueda::busqueda(QWidget *parent, QString fields, QString types) :
+busqueda::busqueda(QWidget *parent, QString fields, QString types,QString keyTypes) :
     QDialog(parent),
     ui(new Ui::busqueda)
 {
     ui->setupUi(this);
 
     ui->lb_info->setVisible(false);
+
+    keyTypes+="1";
 
     QList <QString> campos=fields.split(',');
     QList <QString> tipos=types.split(',');
@@ -34,12 +36,27 @@ QList<QString> busqueda::on_pushButton_clicked()
     numeroDeCampo=ui->cb_busqueda->currentIndex();
     QString query=ui->lb_busqueda->text();
 
+    cout<<"11"<<endl;
+
     QFile indice("./indice.txt");
     QFile resultado("./resultadosIndices.txt");
+
+    cout<<"22"<<endl;
+
     QString buscado=ui->cb_busqueda->currentText();
     QList <QString>lista=buscado.split('(');
+
+    cout<<"IMPRESION DE LISTA: "<<endl;
+    for(int i=0;i<lista.size();i++){
+        cout<<lista.at(i).toStdString()+',';
+    }
+
+    cout<<endl;
+
     if(lista.at(1)=="Integer)"||lista.at(1)=="Double)"){//busqueda de un numero
         QString numero=ui->sb_busqueda->text();
+
+        cout<<"33"<<endl;
 
         indice.open(QIODevice::ReadOnly);
         resultado.open(QIODevice::WriteOnly);
@@ -51,8 +68,17 @@ QList<QString> busqueda::on_pushButton_clicked()
             QString line=in.readLine();
             QList<QString> lista=line.split('\t');
 
+            cout<<"IMPRESION DE LINEA DEL ARCHIVO DE INDICE: "<<endl;
+            for(int i=0;i<lista.size();i++){
+                cout<<lista.at(i).toStdString()+',';
+            }
+            cout<<endl;
+
+            cout<<"44"<<endl;
+
             if(lista.at(numeroDeCampo)==numero){
                 resultadoFinal.append(line+'\n');
+                cout<<"se encontro el resultado"<<endl;
             }
 
         }//fin recorrido de archivo
@@ -69,6 +95,7 @@ QList<QString> busqueda::on_pushButton_clicked()
         indice.open(QIODevice::ReadOnly);
         resultado.open(QIODevice::WriteOnly|QIODevice::Append);
 
+        cout<<"55"<<endl;
 
         //*************inicio busqueda en archivo***********//
         QTextStream in(&indice);
@@ -76,6 +103,8 @@ QList<QString> busqueda::on_pushButton_clicked()
         while(!in.atEnd()){
             QString line=in.readLine();
             QList<QString> lista=line.split('\t');
+
+            cout<<"66"<<endl;
 
             if(lista.at(numeroDeCampo)==query){
                 resultadoFinal.append(line+'\n');

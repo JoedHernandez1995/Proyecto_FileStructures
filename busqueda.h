@@ -19,7 +19,7 @@ public:
 
     QList <QString> getResultadoFinal();
 
-    explicit busqueda(QWidget *parent = 0, QString fields="", QString types="");
+    explicit busqueda(QWidget *parent = 0, QString fields="", QString types="", QString keyTypes="");
     ~busqueda();
 
 private slots:

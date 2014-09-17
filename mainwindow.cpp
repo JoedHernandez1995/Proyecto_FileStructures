@@ -19,15 +19,28 @@
 
 using namespace std;
 
-QFile archivo("./archivo.txt");
-QFile archivoComp("./Compactado.txt");
-QFile archivorrn("./RRN.txt");
-QFile impBonita("./impBonita.txt");
-QFile numeroRegistros("./numeroRegistros.txt");
-QFile indice("./indice.txt");
-QFile resultados("./resultadosIndices.txt");
-int registerLength=0;
-QList <Campo> estructura;
+/*
+ *Hecho por Horacio Galdamez y Jose Hernandez
+ *
+ *Proyecto de Organizacion de Archivos
+ *Este proyecto se vale de archivos de texto principalmente para poder guardar, agregar, buscar
+ *y eliminar registros, implementando:
+ *
+ *AvailList
+ *Indices
+ *Arbol B
+ */
+
+QFile archivo("./archivo.txt");//el archivo donde se guardaran los registros
+QFile archivoComp("./Compactado.txt");//el archivo nuevo en el que se escriben los registros no marcados
+QFile archivorrn("./RRN.txt");//archivo donde se guardara el rrn del registro borrado mas reciente
+QFile impBonita("./impBonita.txt");//archivo donde se guarda la "impresion bonita" del archivo.txt
+QFile numeroRegistros("./numeroRegistros.txt");//archivo donde se guarda el numero de reigstro que se esta
+                                                                                                  //agregando al archivo.txt, para no repetirse.
+QFile indice("./indice.txt");//archivo donde se guardan los registros con su llave primaria
+QFile resultados("./resultadosIndices.txt");//archivo donde se guardan los resultados de la busqueda del indice
+int registerLength=0;//longitud del registro
+QList <Campo> estructura;//lista de campos que forman la estructura de todo el archivo
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -35,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //creacion de la tabla que desplega la estructura que creo el usuario
     ui->tablaEstructura->setColumnCount(4);
     ui->tablaEstructura->setHorizontalHeaderItem(0,new QTableWidgetItem("Nombre"));
     ui->tablaEstructura->setHorizontalHeaderItem(1,new QTableWidgetItem("Tipo"));
@@ -47,31 +61,35 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    //delete window;
 }
 
 void MainWindow::on_actionNuevo_Archivo_triggered()
 {
-  bool ok;
+
+    //opcion de crear una nueva estructura
+
+  bool ok;//bandera requerida para la ventana de dialogo utilizada para que el usuario ingrese el campo
 
 
-  QList <Campo> arregloDeEstructura;
-  //QFile archivo("archivo.txt");
+  QList <Campo> arregloDeEstructura;//representa la linea del encabezado del archivo de impresion bonita
 
-  QString text = QInputDialog::getText(this, tr("Nombre del Archivo"),tr("Ingrese el nombre:"), QLineEdit::Normal,"", &ok);  
+  /*
+   *A continuacion, se desplegan las ventanas de dialogo que ayudaran al usuario a crear la estructura
+   *del archivo a su conveniencia.
+   */
 
-  //archivo.rename(text);
+  QString text = QInputDialog::getText(this, tr("Nombre del Archivo"),tr("Ingrese el nombre:"), QLineEdit::Normal,"", &ok);  //desplegado de ventana de dialogo para que el usuario ingrese el nombre del archivo
 
-  int num = QInputDialog::getInt(this,tr("Numero de Campos"),tr("Ingrese el numero de campos"),1,1,2147483647,1,&ok,0);
 
- //vetanaCampos* window = new vetanaCampos(this,num);
- //window->show();
-  vetanaCampos ventana(0,num);
-  ventana.setModal(true);
-  ventana.exec();
 
-  QList<Campo> campos=ventana.getListaCampos();
-  estructura=campos;
+  int num = QInputDialog::getInt(this,tr("Numero de Campos"),tr("Ingrese el numero de campos"),1,1,2147483647,1,&ok,0);//ventana de dialogo que pide el numero de campos que iran en la estructura
+
+  vetanaCampos ventana(0,num);//creacion de la ventana que se desplega el numero de veces de campos
+  ventana.setModal(true);//se valida que solo se pueda interactuar con esta ventana mientras este abierta
+  ventana.exec();//se ejecuta la ventana
+
+  QList<Campo> campos=ventana.getListaCampos();//arreglo de campos obtenidos de la ventana
+  estructura=campos;//se le asigna la lista en memoria a otro arreglo
 Registro registro;
 registro.setListaCampos(ventana.getListaCampos());
 cout<<"{";
@@ -86,52 +104,51 @@ for(int i=0;i<registro.getLista().size();i++){
     delimitadoresPorAgregar++;
 }
  delimitadoresPorAgregar++;//se agrega el delitadr de nueva linea
-//registerLength+=delimitadoresPorAgregar;
+
 
 cout<<"}"<<endl;
 
-insertarEncabezadoBonito(arregloDeEstructura);
-   cout<<"buenaaaaaaaaaaaaaaaaaaaaas999";
+insertarEncabezadoBonito(arregloDeEstructura);//metodo que esribe el encabezado de impresion bonita
+                                                                                                  //en el encabezado del archivo
 
 }
 
 void MainWindow::on_actionAgregar_triggered()
 {
 
+    //metodo de agregar registro
+
+    QString campoEnviarIndice;//campoEnviado al archivo de indices
+    QString tipo;//tipo enviado al archivo del indice
+         QString enviadoAIndice;//campo enviado al archivo de indice
+
     if(!numeroRegistros.open(QIODevice::ReadWrite))
-        return;
+        return;//se abre el archivo
 
 
     QTextStream escrituraDeRegistrosIN(&numeroRegistros);//lee cuantos registros existen en otro archivo de texto
-   // QTextStream escrituraDeRegistrosOUT(&numeroRegistros);
 
-       cout<<"buenaaaaaaaaaaaaaaaaaaaaas";
 
-    QString  temporal=escrituraDeRegistrosIN.readLine();
+    QString  temporal=escrituraDeRegistrosIN.readLine();//campo asignado a la linea del archivo leido
 
-    int numeroActualDeRegistros=temporal.toInt()+1;
-    //QString numeroActualEnString=QString::number(numeroActualDeRegistros);
-    escrituraDeRegistrosIN.seek(0);
-    //escrituraDeRegistrosIN<<"n";
-    escrituraDeRegistrosIN<<numeroActualDeRegistros;
+    int numeroActualDeRegistros=temporal.toInt()+1;//numero de registro escrito en el archivo de texto
+    escrituraDeRegistrosIN.seek(0);//se ubica el file pointer en la linea cero del archivo
+    escrituraDeRegistrosIN<<numeroActualDeRegistros;//se escribe el numero del archivo +1
 
-    //QString numeroDeRegistro;
     ///numeroDeRegistro=numeroActualEnString.at(temporal.size());
 
-       cout<<"buenaaaaaaaaaaaaaaaaaaaaas2";
 
-    numeroRegistros.close();
+    numeroRegistros.close();//se cierra el archivo
 
     if(!impBonita.open(QIODevice::ReadWrite|QIODevice::Text|QIODevice::Append))
-        return;
+        return;//se abre el archivo
 
        QTextStream salidaBonita(&impBonita);
 
-       salidaBonita<<numeroActualDeRegistros<<").-";
+       salidaBonita<<numeroActualDeRegistros<<").-";//se escribe el numero de registro para saber su posicion
 
-       impBonita.close();
+       impBonita.close();//se cierra el archivo
 
-          cout<<"buenaaaaaaaaaaaaaaaaaaaaa3";
 
     QString registroEnviado;
     QString text;
@@ -139,26 +156,48 @@ void MainWindow::on_actionAgregar_triggered()
     //double numeroReal;
     bool ok;
 
-
-    for(int i=0;i<estructura.size();i++){
-        if(estructura.at(i).getType()=="Char"||estructura.at(i).getType()=="String"){
-
-           text = QInputDialog::getText(this,(estructura.at(i).getname()),("Ingrese "+estructura.at(i).getname()),  QLineEdit::Normal,"", &ok);
-
-               setFixedLength(text,estructura.at(i).getLength());
+    QList <QString> camposIndice;//campo enviadoal archivo de indice
+    //estructura
 
 
+    for(int i=0;i<estructura.size();i++){//se recorre la estructura, para conocer el tipo de cada campo en ella
+        if(estructura.at(i).getType()=="Char"||estructura.at(i).getType()=="String"){//si el campo es caracter o cadena
+
+           text = QInputDialog::getText(this,(estructura.at(i).getname()),("Ingrese "+estructura.at(i).getname()),  QLineEdit::Normal,"", &ok);//text es el texto que ingresa el usuario en la ventana
+
+               setFixedLength(text,estructura.at(i).getLength());//metodo que valida que los todos los campos del archivo sean del mismo tamaño
+               camposIndice.append(text);
+
+               /*
+                *rellenar otro qstring sin los ------ y enviar este qstring como parametro a la funcion de rellenado de indice
+                **/
+
+
+               //reescritura del campo, obviando los caracteres - que se utilizaron para rellenarlos
+               for(int i=0;i<text.size();i++){
+                   if(text.at(i)!='-'){
+                       enviadoAIndice+=text.at(i);
+                   }
+               }
+
+               cout<<"text NUEVO es: "<<enviadoAIndice.toStdString()<<endl;
 
         }//fin si es de tipo cadena o caracter
 
             if(estructura.at(i).getType()=="Integer"||estructura.at(i).getType()=="Double"){
-            num = QInputDialog::getInt(this,(estructura.at(i).getname()),("Ingrese "+estructura.at(i).getname()),1,1,2147483647,1,&ok,0);
+            num = QInputDialog::getInt(this,(estructura.at(i).getname()),("Ingrese "+estructura.at(i).getname()),1,1,2147483647,1,&ok,0);//si el campo es de tipo interger o double
 
 
             int tamanioEntrada=0;
-            QString numero=QString::number(num);
+            QString numero=QString::number(num);//numero que el usuario ingreso
+             camposIndice.append(QString::number(num));//campo enviado al indice
+             setFixedLength(numero,estructura.at(i).getLength());//metodo que estandariza el tamaño del campo
 
-             setFixedLength(numero,estructura.at(i).getLength());
+             campoEnviarIndice=enviadoAIndice;//campo enviado al archivo de indice
+
+             if(estructura.at(i).IsKey())//si ese campo es llave primaria
+                tipo=estructura.at(i).getType();//se obtiene el tipo
+
 
             for(int i=0;i<numero.size();i++){
                 tamanioEntrada++;
@@ -190,18 +229,14 @@ void MainWindow::on_actionAgregar_triggered()
     QTextStream out(&archivo);
 
 
-   // while(!in.atEnd()){
        QString line=in.readLine();
        int availListHead=line.toInt();
        cout<<"avail:"<<availListHead<<endl;
-       //QString availString=QString::number(availListHead);
 
        if(availListHead==-1){
            cout<<"Archivo vacio!"<<endl;
        }else{
            cout<<"El archivo contiene datos!"<<endl;
-           //archivo.seek((availListHead-1)*registerLength)
-           //out<<registroEnviado;
            cout<<"se escribio"<<endl;
        }//fin else por si el archivo NO esta vacio
 
@@ -211,12 +246,12 @@ void MainWindow::on_actionAgregar_triggered()
        QTextStream salidaFinal(&impBonita);
 
        out<<'\n';
-       //salidaFinal<<'\n';
 
 
        archivo.close();
       impBonita.close();
 
+      rellenarIndice(estructura,tipo,campoEnviarIndice,camposIndice);
 
 }
 
@@ -257,22 +292,16 @@ void MainWindow::on_actionListar_triggered()
         QList<QString>arregloCamposLeidos=line.split(',');
 
         cout<<line.toStdString()<<endl;
-       // cout<<"TAMAÑO:"<<arregloCamposLeidos.size()<<endl;
-
-      //  cout<<"Primer caracter: "<<arregloCamposLeidos.at(0)[0]<<endl
     if(arregloCamposLeidos.at(0)[0]!='&'){//si el registro no esta marcado como borrado ...
 
         //***************** ***Agregado a Tabla********************//
         cout<<"Numero inicial de rows: "<<ui->tablaLista->rowCount()<<endl;
 
         int row=ui->tablaLista->rowCount();
-        //bool endOfRecord=false;
         int recordSize=0;
 
             for(int i=0;i<arregloCamposLeidos.size()-1;i++){
                 cout<<"Se insertaria "<<arregloCamposLeidos.at(i).toStdString()<<" en la fila"<<row<<" y en la columna "<<i<<endl;
-                //if(ui->tablaLista->rowCount()==0)
-                //ui->tablaLista->insertRow(row);
 
                 QTableWidgetItem* item= new QTableWidgetItem();
                 item->setText("hola");
@@ -339,55 +368,28 @@ void MainWindow::on_actionBorrar_triggered()
      *cerramos archivo
      */
 
-   // int rrn=ui->tablaLista->currentRow();
-
-    //cout<<"hola"<<endl;
 
 
     if(!archivo.open(QIODevice::ReadWrite|QIODevice::Text))
         return;
 
-   // cout<<"hola2"<<endl;
     int numberOfLines=0;
 
-    // cout<<"hola2"<<endl;
-    //int regLength=0;
 
     QTextStream in(&archivo);
-    //QTextStream out(&archivo);
 
 
     while(!in.atEnd()){
-        //cout<<"hola3"< <endl;
-
-        //cout<<"init: "<<in.pos()<<endl;
 
         QString line=in.readLine();
         numberOfLines++;
-        //cout<<"se ha sumado uno a las filas"<<endl;
 
         if(numberOfLines==2){
-           // cout<<"se ha llegado a la mera linea"<<endl;
-            //cout<<line.toStdString()<<endl;
-
-            //in.seek((20*(numberOfLines-1)+1));
             in.seek((2-1)*30);
              cout<<"pos: "<<in.pos();
             QString tempLine=line;
             tempLine[0]='&';
             in<<tempLine<<'\n';
-            /*
-            for(int i=0;i<line.size();i++){
-                tempLine+="&";
-                regLength++;
-            }
-            */
-
-          //  line[0]='&';
-            //cout<<tempLine.toStdString()<<endl;
-            //cout<<"pos:"<<in.pos()-regLength-1<<endl;
-            //cout<<endl<<regLength<<endl;
-           // out.seek(in.pos()-regLength-1);
 
         }
 
@@ -399,7 +401,6 @@ void MainWindow::on_actionBorrar_triggered()
 
 void MainWindow::setFixedLength(QString &texto, int size){
 
-    //QFile archivo("./archivo.txt");
 
     if(!archivo.open(QIODevice::ReadWrite|QIODevice::Text|QIODevice::Append))
             return;
@@ -407,18 +408,11 @@ void MainWindow::setFixedLength(QString &texto, int size){
     if(!impBonita.open(QIODevice::ReadWrite|QIODevice::Text|QIODevice::Append))
         return;
 
-   // if(!numeroRegistros.open(QIODevice::ReadWrite|QIODevice::Text))
-//        return;
-
         QTextStream in(&archivo);
         QTextStream out(&archivo);
         QTextStream salidaBonita(&impBonita);
-        //QTextStream numeroDeRegistros(&numeroRegistros);
 
         QString textoBonito=texto;
-       // QString temporal=(numeroDeRegistros.readLine());
-        //int numero=temporal.toInt();
-        //int numeroDelRegistro=numero;
 
     //validar si tiene menos que el limite
 
@@ -428,29 +422,37 @@ void MainWindow::setFixedLength(QString &texto, int size){
               }//fin del recorrido de la cadena
               out<<texto<<',';
 
-                salidaBonita<<textoBonito<<'\t';
+              salidaBonita<<textoBonito<<'\t';
           }//fin relleno de registro si es de menor longitud al limite
 
-          QString newText="";
+          else
+
+          if(texto.size()==size){
+              out<<texto<<',';
+              salidaBonita<<textoBonito<<'\t';
+          }
+
+          else
 
                  if(texto.size()>size){
+
+                     QString newText="";
+
                      for(int i=0;i<size;i++){
                          newText.append(texto.at(i));
                      }
                      out<<newText+',';
-                       salidaBonita<<newText<<'\t';
+                       salidaBonita<<newText;
                  }
 
       archivo.close();
       impBonita.close();
-      //numeroRegistros.close();
 
 }//fin de la funcion
 
 
 void MainWindow::setFixedLength(int &numero,int numberSize,int limiteTamanio){//number size es el numero de digitos que ingreso el usuario en la dialog
 
-   // QFile archivo("./archivo.txt");
 
     if(!archivo.open(QIODevice::ReadWrite|QIODevice::Text|QIODevice::Append))
             return;
@@ -485,7 +487,6 @@ void MainWindow::setFixedLength(int &numero,int numberSize,int limiteTamanio){//
 void MainWindow::on_actionCompactar_triggered()
 {
     //opcion de compactacion
-    //QFile archivoComp("./Compactado.txt");
 
     if(!archivoComp.open(QIODevice::ReadWrite|QIODevice::Text))
         return;
@@ -496,13 +497,10 @@ void MainWindow::on_actionCompactar_triggered()
     QTextStream in(&archivo);
     QTextStream out(&archivoComp);
 
-    //out<<"";
 
     while(!in.atEnd()){
        QString line=in.readLine();
-       //cout<<line.toStdString()<<endl;
        if(line.at(0)!='&'){
-           //cout<<"es escribe "<<line.toStdString()<<" al archivo"<<endl;
            out<<line<<'\n';
 
        }//fin si el registro no esta marcado
@@ -562,13 +560,21 @@ void MainWindow::on_actionBuscar_triggered()
         QString fields="";
         QString types="";
 
+        QString finalField;
+        QString finalType;
+
+        QString keyType;
+
+        Campo campoFinal;
+
+
     for(int i=0;i<estructura.size();i++){
         fields+=estructura.at(i).getname()+",";
         types+=estructura.at(i).getType()+",";
     }
 
     //crear dialog window aqui
-    busqueda search(0,fields,types);
+    busqueda search(0,fields,types,keyType);
     search.setModal(true);
     search.exec();
 
@@ -583,9 +589,80 @@ void MainWindow::on_actionBuscar_triggered()
 
 }//fin de la funcion busqueda
 
+void MainWindow::rellenarIndice(QList <Campo> estructura,QString tipo,QString campo,QList <QString> campos){
+
+    if(!indice.open(QIODevice::WriteOnly|QIODevice::Append))
+        return;
+
+    QTextStream out(&indice);
+
+    for(int i=0;i<estructura.size();i++){
+        if(estructura.at(i).getType()==tipo){
+            cout<<"INDICE 1, SE ESCRIBE: "<<campo.toStdString()<<endl;
+            for(int j=0;j<campos.size();j++){
+                if(campos.at(j)==campo){
+                    cout<<"INDICE 2 SE VA A REMOVER: "<<campos.at(j).toStdString()<<endl;
+                    campos.removeAt(j);
+                }
+            }
+        }
+    }//fin for
+
+    for(int i=0;i<campos.size();i++){
+        QString campito="";
+        for(int j=0;j<campos.at(i).size();j++){
+            if(campos.at(i).at(j)!='-'){
+                campito+=campos.at(i).at(j);
+            }
+        }
+        cout<<"INDICE 3: SE ESCRIBE: "<<campito.toStdString()<<endl;
+        out<<campito<<'\t';
+    }
+
+    out <<'\n';
+    indice.close();
+
+}
 
 
 
 
 
 
+void MainWindow::on_pushButton_clicked()
+{
+
+    estructura.clear();
+    for(int i = 0; i < ui->tablaEstructura->rowCount(); i++){
+        QString name = ui->tablaEstructura->item(i,0)->text();
+        QString type = ui->tablaEstructura->item(i,1)->text();
+        int length = ui->tablaEstructura->item(i,2)->text().toInt();
+        bool key;
+        if(ui->tablaEstructura->item(i,3)->text().toStdString() == "True"){
+            key = true;
+        }else{
+            key = false;
+        }
+        Campo camp1;
+        camp1.setName(name);
+        camp1.setType(type);
+        camp1.setLength(length);
+        camp1.setKey(key);
+        estructura.append(camp1);
+    }
+    //Limpiar la Tabla
+    if(ui->tablaEstructura->rowCount() != 0){
+        for(int i = 0; i < ui->tablaEstructura->rowCount(); i++){
+            ui->tablaEstructura->removeRow(i);
+        }
+    }
+    //Agregar la nueva estructura
+    ui->tablaEstructura->setRowCount(estructura.count());
+    for(int i = 0; i < estructura.count();i++){
+        ui->tablaEstructura->setItem(i,0,new QTableWidgetItem(estructura.at(i).getname()));
+        ui->tablaEstructura->setItem(i,2,new QTableWidgetItem(estructura.at(i).getLength()));
+        ui->tablaEstructura->setItem(i,1,new QTableWidgetItem(estructura.at(i).getType()));
+        ui->tablaEstructura->setItem(i,3,new QTableWidgetItem(estructura.at(i).IsKey()));
+    }
+
+}

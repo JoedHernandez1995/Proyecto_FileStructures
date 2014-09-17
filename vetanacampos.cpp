@@ -63,6 +63,10 @@ void vetanaCampos::on_btnAgregar_clicked()
     campo1.setKey(ui->radioPrimaria->isChecked());
     i++;
 
+    if(ui->radioPrimaria->isChecked()){
+        ui->radioPrimaria->setEnabled(false);
+    }
+
     //enviar el campo al registro
     this->camposPorAgregar.append(campo1);
     cout<<"agregado a lista";

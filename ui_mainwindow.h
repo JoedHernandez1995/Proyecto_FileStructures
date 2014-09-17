@@ -18,6 +18,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTextBrowser>
@@ -44,6 +45,8 @@ public:
     QLabel *lb_info;
     QTableWidget *tablaLista;
     QTextBrowser *browserImpresion;
+    QLabel *label;
+    QPushButton *pushButton;
     QMenuBar *menuBar;
     QMenu *menuArchivo;
     QMenu *menuRegistros;
@@ -55,7 +58,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(671, 417);
+        MainWindow->resize(617, 535);
         MainWindow->setUnifiedTitleAndToolBarOnMac(true);
         actionNuevo_Archivo = new QAction(MainWindow);
         actionNuevo_Archivo->setObjectName(QStringLiteral("actionNuevo_Archivo"));
@@ -81,21 +84,27 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tablaEstructura = new QTableWidget(centralWidget);
         tablaEstructura->setObjectName(QStringLiteral("tablaEstructura"));
-        tablaEstructura->setGeometry(QRect(10, 30, 141, 251));
+        tablaEstructura->setGeometry(QRect(10, 30, 401, 141));
         lb_info = new QLabel(centralWidget);
         lb_info->setObjectName(QStringLiteral("lb_info"));
-        lb_info->setGeometry(QRect(40, 0, 211, 21));
+        lb_info->setGeometry(QRect(10, 0, 161, 21));
         tablaLista = new QTableWidget(centralWidget);
         tablaLista->setObjectName(QStringLiteral("tablaLista"));
-        tablaLista->setGeometry(QRect(220, 30, 91, 31));
+        tablaLista->setGeometry(QRect(150, 390, 91, 31));
         tablaLista->setRowCount(0);
         browserImpresion = new QTextBrowser(centralWidget);
         browserImpresion->setObjectName(QStringLiteral("browserImpresion"));
-        browserImpresion->setGeometry(QRect(160, 70, 421, 271));
+        browserImpresion->setGeometry(QRect(10, 220, 401, 251));
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(10, 190, 131, 17));
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setGeometry(QRect(460, 190, 99, 27));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 671, 25));
+        menuBar->setGeometry(QRect(0, 0, 617, 25));
         menuArchivo = new QMenu(menuBar);
         menuArchivo->setObjectName(QStringLiteral("menuArchivo"));
         menuRegistros = new QMenu(menuBar);
@@ -149,7 +158,9 @@ public:
         actionCompactar->setText(QApplication::translate("MainWindow", "Compactar", 0));
         actionReindexar->setText(QApplication::translate("MainWindow", "Reindexar", 0));
         actionExportar->setText(QApplication::translate("MainWindow", "Exportar", 0));
-        lb_info->setText(QApplication::translate("MainWindow", "Seleccione una de las opciones", 0));
+        lb_info->setText(QApplication::translate("MainWindow", "Estructura del Archivo", 0));
+        label->setText(QApplication::translate("MainWindow", "Tabla de Registros", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "Modificar", 0));
         menuArchivo->setTitle(QApplication::translate("MainWindow", "Archivo", 0));
         menuRegistros->setTitle(QApplication::translate("MainWindow", "Registros", 0));
         menuOPeraciones->setTitle(QApplication::translate("MainWindow", "Operaciones", 0));
